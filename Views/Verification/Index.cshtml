@@ -1,0 +1,23 @@
+<h2 class="mb-4">🔍 Vérification des annonces</h2>
+
+@foreach (var a in Model)
+{
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+            <h5>@a.Titre</h5>
+            <p>@a.Vehicule.Marque - @a.Vehicule.Modele - @a.Vehicule.Prix €</p>
+
+            <a class="btn btn-success btn-sm"
+               asp-action="Approve"
+               asp-route-id="@a.Id">
+                ✔ Approuver
+            </a>
+
+            <a class="btn btn-danger btn-sm"
+               asp-action="Reject"
+               asp-route-id="@a.Id">
+                ✖ Rejeter
+            </a>
+        </div>
+    </div>
+}

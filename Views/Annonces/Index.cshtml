@@ -1,0 +1,55 @@
+@model List<AutoMarket.Models.Annonce>
+@{
+    ViewData["Title"] = "Annonces";
+}
+
+<h2 class="mb-4 text-center">🚘 Annonces disponibles</h2>
+
+<form asp-action="Search" method="get" class="row mb-4">
+    <div class="col-md-10">
+        <input name="keyword" class="form-control" placeholder="Rechercher par titre ou marque..." />
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100">Rechercher</button>
+    </div>
+</form>
+
+<div class="row g-4">
+@foreach (var a in Model)
+{
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+
+            <img src="@(string.IsNullOrEmpty(a.Vehicule.PhotoPath) ? "/images/no-image.png" : a.Vehicule.PhotoPath)"
+                 class="card-img-top"
+                 style="height:200px; object-fit:cover;" />
+
+            <div class="card-body">
+                <h5 class="card-title">@a.Titre</h5>
+
+                <p class="card-text">
+                    <strong>@a.Vehicule.Marque</strong> @a.Vehicule.Modele<br />
+                    💰 @a.Vehicule.Prix €
+                </p>
+
+                @if (a.Vehicule.Verifie)
+                {
+                    <span class="badge bg-success">✔ Vérifié</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark">⏳ En attente</span>
+                }
+            </div>
+
+            <div class="card-footer bg-white">
+                <a class="btn btn-outline-primary w-100"
+                   asp-action="Details"
+                   asp-route-id="@a.Id">
+                    Voir détails
+                </a>
+            </div>
+        </div>
+    </div>
+}
+</div>

@@ -1,0 +1,26 @@
+@model List<AutoMarket.Models.Annonce>
+
+<h2>Résultats de recherche</h2>
+
+@if (!Model.Any())
+{
+    <p>Aucune annonce trouvée.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var a in Model)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <img src="@a.Vehicule.PhotoPath" class="card-img-top">
+                    <div class="card-body">
+                        <h5>@a.Titre</h5>
+                        <p>@a.Vehicule.Prix €</p>
+                        <a class="btn btn-primary" href="/Annonces/Details/@a.Id">Voir</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

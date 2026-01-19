@@ -1,0 +1,25 @@
+@model AutoMarket.Models.Avis
+
+<h2>Ajouter un avis</h2>
+
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="AnnonceId" value="@ViewBag.AnnonceId" />
+
+    <div class="mb-3">
+        <label>Auteur</label>
+        <input asp-for="Auteur" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Note (1 à 5)</label>
+        <input asp-for="Note" type="number" min="1" max="5" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Commentaire</label>
+        <textarea asp-for="Commentaire" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-success">Envoyer</button>
+    <a href="/Annonces/Details/@ViewBag.AnnonceId" class="btn btn-secondary">Retour</a>
+</form>

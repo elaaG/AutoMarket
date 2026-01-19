@@ -1,0 +1,70 @@
+@model AutoMarket.Models.Annonce
+@{
+    ViewData["Title"] = "Détails annonce";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <img src="@Model.Vehicule.PhotoPath"
+             class="img-fluid rounded shadow"
+             style="object-fit:cover;" />
+    </div>
+
+    <div class="col-md-6">
+        <h3>@Model.Titre</h3>
+
+        <ul class="list-group mb-3">
+            <li class="list-group-item"><strong>Marque:</strong> @Model.Vehicule.Marque</li>
+            <li class="list-group-item"><strong>Modèle:</strong> @Model.Vehicule.Modele</li>
+            <li class="list-group-item"><strong>Année:</strong> @Model.Vehicule.Annee</li>
+            <li class="list-group-item"><strong>Kilométrage:</strong> @Model.Vehicule.Kilometrage km</li>
+            <li class="list-group-item"><strong>Prix:</strong> @Model.Vehicule.Prix €</li>
+        </ul>
+    </div>
+</div>
+
+<hr />
+
+<h4>📝 Ajouter un avis</h4>
+<form asp-controller="Avis" asp-action="Create" method="post" class="card p-3">
+    <input type="hidden" name="annonceId" value="@Model.Id" />
+
+    <div class="mb-2">
+        <label>Auteur</label>
+        <input name="auteur" class="form-control" required />
+    </div>
+
+    <div class="mb-2">
+        <label>Note (1 à 5)</label>
+        <input name="note" type="number" min="1" max="5" class="form-control" required />
+    </div>
+
+    <div class="mb-2">
+        <label>Commentaire</label>
+        <textarea name="commentaire" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-success mt-2">Envoyer</button>
+</form>
+<hr />
+<h4>⭐ Avis des utilisateurs</h4>
+
+@if (ViewBag.Avis == null || ((List<AutoMarket.Models.Avis>)ViewBag.Avis).Count == 0)
+{
+    <p class="text-muted">Aucun avis pour cette annonce.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var a in (List<AutoMarket.Models.Avis>)ViewBag.Avis)
+        {
+            <li class="list-group-item">
+                <strong>@a.Auteur</strong>
+                <span class="badge bg-primary ms-2">@a.Note / 5</span>
+                <br />
+                <p class="mb-1">@a.Commentaire</p>
+                <small class="text-muted">@a.Date.ToShortDateString()</small>
+            </li>
+        }
+    </ul>
+}

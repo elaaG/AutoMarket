@@ -1,0 +1,61 @@
+@model IEnumerable<AutoMarket.Models.Annonce>
+
+<h2 class="mb-4">📊 Dashboard - Mes annonces</h2>
+<a class="btn btn-success mb-4" asp-action="Create">
+    ➕ Créer une annonce
+</a>
+
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Aucune annonce disponible.
+    </div>
+}
+else
+{
+    <div class="row">
+        @foreach (var a in Model)
+{
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+
+            <img src="@(a.Vehicule?.PhotoPath ?? "/images/no-image.png")"
+                 class="card-img-top"
+                 style="height:200px; object-fit:cover;" />
+
+            <div class="card-body">
+                <h5 class="card-title">@a.Titre</h5>
+
+                <span class="badge mb-2
+                    @(a.Statut == "Validée" ? "bg-success" :
+                      a.Statut == "Rejetée" ? "bg-danger" : "bg-warning text-dark")">
+                    @a.Statut
+                </span>
+
+                <p class="card-text mt-2">
+                    @a.Vehicule?.Marque - @a.Vehicule?.Modele
+                </p>
+
+                <p class="fw-bold">
+                    Prix: @a.Vehicule?.Prix €
+                </p>
+            </div>
+
+            <div class="card-footer d-flex justify-content-between">
+                <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@a.Id">👁</a>
+                <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@a.Id">✏</a>
+                <form asp-action="DeleteConfirmed" method="post" asp-route-id="@a.Id">
+                    <button class="btn btn-sm btn-danger">🗑</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+    </div>
+}
+
+<a class="btn btn-secondary mt-3" asp-action="Index">
+    ← Retour aux annonces
+</a>
