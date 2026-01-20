@@ -6,18 +6,18 @@ namespace AutoMarket.Data
     {
         public static void Seed(AppDbContext context)
         {
-            // Check if users exist
             if (!context.Users.Any())
             {
-                var defaultUser = new User
+                var defaultUser = new AppUser
                 {
-                    Name = "Default User",
-                    Email = "user@automarket.com"
+                    UserName = "defaultuser",
+                    Email = "user@automarket.com",
+                    EmailConfirmed = true
                 };
+
                 context.Users.Add(defaultUser);
                 context.SaveChanges();
 
-                // Create some vehicles
                 var v1 = new Vehicule
                 {
                     Marque = "BMW",
@@ -43,7 +43,6 @@ namespace AutoMarket.Data
                 context.Vehicules.AddRange(v1, v2);
                 context.SaveChanges();
 
-                // Create annonces
                 var a1 = new Annonce
                 {
                     Titre = "BMW Serie 3 à vendre",
@@ -61,7 +60,7 @@ namespace AutoMarket.Data
                     Statut = "En attente",
                     DatePublication = DateTime.Now,
                     VehiculeId = v2.Id,
-                    SellerId = defaultUser.Id
+                    SellerId = defaultUser.Id 
                 };
 
                 context.Annonces.AddRange(a1, a2);

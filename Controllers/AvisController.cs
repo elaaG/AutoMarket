@@ -1,30 +1,35 @@
 using Microsoft.AspNetCore.Mvc;
 using AutoMarket.Models;
-using AutoMarket.Services;  
+using AutoMarket.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AutoMarket.Controllers
 {
     public class AvisController : Controller
     {
-        private readonly MongoAvisService _avisService;  
+        private readonly MongoAvisService _avisService;
 
-        public AvisController(MongoAvisService avisService)  
+        public AvisController(MongoAvisService avisService)
         {
             _avisService = avisService;
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Create(int annonceId, string auteur, string commentaire, int note)  // Add 'auteur' parameter
+        public async Task<IActionResult> Create(int annonceId, string commentaire, int note)
         {
+            var auteur = User.Identity.Name ?? "Anonymous";
+
             var avis = new Avis
             {
                 AnnonceId = annonceId,
-                Auteur = auteur,  
+                Auteur = auteur,
                 Commentaire = commentaire,
                 Note = note
             };
 
-            await _avisService.AddAvisAsync(avis);  
+            await _avisService.AddAvisAsync(avis);
 
             return RedirectToAction("Details", "Annonces", new { id = annonceId });
         }

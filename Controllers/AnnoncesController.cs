@@ -4,6 +4,8 @@ using AutoMarket.Data;
 using AutoMarket.Models;
 using AutoMarket.Models.ViewModels;
 using AutoMarket.Services;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AutoMarket.Controllers
 {
@@ -33,10 +35,14 @@ namespace AutoMarket.Controllers
             return View(annonces);
         }
 
+        [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Dashboard()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var annonces = await _context.Annonces
                 .Include(a => a.Vehicule)
+                .Where(a => a.SellerId == userId)
                 .ToListAsync();
 
             return View(annonces);
@@ -52,19 +58,19 @@ namespace AutoMarket.Controllers
                 return NotFound();
 
             var avis = await _avisService.GetAvisByAnnonceAsync(id);
-
             ViewBag.Avis = avis;
 
             return View(annonce);
         }
 
-
+        [Authorize(Roles = "Seller")]
         [HttpGet]
         public IActionResult Create()
         {
             return View(new AnnonceEditVM());
         }
 
+        [Authorize(Roles = "Seller")]
         [HttpPost]
         public async Task<IActionResult> Create(AnnonceEditVM vm)
         {
@@ -100,7 +106,9 @@ namespace AutoMarket.Controllers
 
             _context.Vehicules.Add(vehicule);
             await _context.SaveChangesAsync();
-            var seller = await _context.Users.FirstAsync(); 
+
+            var sellerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var annonce = new Annonce
             {
                 Titre = vm.Titre,
@@ -108,8 +116,7 @@ namespace AutoMarket.Controllers
                 Statut = "En attente",
                 DatePublication = DateTime.Now,
                 VehiculeId = vehicule.Id,
-                SellerId = seller.Id   
-
+                SellerId = sellerId
             };
 
             _context.Annonces.Add(annonce);
@@ -118,6 +125,7 @@ namespace AutoMarket.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
+        [Authorize(Roles = "Seller")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -127,6 +135,10 @@ namespace AutoMarket.Controllers
 
             if (annonce == null)
                 return NotFound();
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (annonce.SellerId != userId)
+                return Forbid();
 
             var vm = new AnnonceEditVM
             {
@@ -144,6 +156,7 @@ namespace AutoMarket.Controllers
             return View(vm);
         }
 
+        [Authorize(Roles = "Seller")]
         [HttpPost]
         public async Task<IActionResult> Edit(AnnonceEditVM vm)
         {
@@ -156,6 +169,10 @@ namespace AutoMarket.Controllers
 
             if (annonce == null)
                 return NotFound();
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (annonce.SellerId != userId)
+                return Forbid();
 
             annonce.Titre = vm.Titre;
             annonce.Type = vm.Type;
@@ -184,6 +201,7 @@ namespace AutoMarket.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
+        [Authorize(Roles = "Seller")]
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -194,13 +212,18 @@ namespace AutoMarket.Controllers
             if (annonce == null)
                 return NotFound();
 
-            // ORDER MATTERS
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (annonce.SellerId != userId)
+                return Forbid();
+
             _context.Annonces.Remove(annonce);
             _context.Vehicules.Remove(annonce.Vehicule);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Dashboard));
         }
+
+        
         public async Task<IActionResult> Search(string keyword)
         {
             var annonces = await _context.Annonces
@@ -212,7 +235,5 @@ namespace AutoMarket.Controllers
 
             return View(annonces);
         }
-
-
     }
 }
