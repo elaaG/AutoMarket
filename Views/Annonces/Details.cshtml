@@ -25,7 +25,37 @@
 
 <hr />
 
+
+<hr />
+
+<h3>⭐ Avis & Notes</h3>
+
+<p>
+    <strong>Note moyenne :</strong>
+    @ViewBag.Average / 5
+</p>
+
+@if (ViewBag.Avis == null || ((List<AutoMarket.Models.Avis>)ViewBag.Avis).Count == 0)
+{
+    <p class="text-muted">Aucun avis pour cette annonce.</p>
+}
+else
+{
+    <ul class="list-group mb-4">
+        @foreach (var a in (List<AutoMarket.Models.Avis>)ViewBag.Avis)
+        {
+            <li class="list-group-item">
+                <strong>@a.Auteur</strong>
+                <span class="badge bg-primary ms-2">@a.Note / 5</span>
+                <p class="mb-1">@a.Commentaire</p>
+                <small class="text-muted">@a.Date.ToShortDateString()</small>
+            </li>
+        }
+    </ul>
+}
+
 <h4>📝 Ajouter un avis</h4>
+
 <form asp-controller="Avis" asp-action="Create" method="post" class="card p-3">
     <input type="hidden" name="annonceId" value="@Model.Id" />
 
@@ -46,25 +76,3 @@
 
     <button class="btn btn-success mt-2">Envoyer</button>
 </form>
-<hr />
-<h4>⭐ Avis des utilisateurs</h4>
-
-@if (ViewBag.Avis == null || ((List<AutoMarket.Models.Avis>)ViewBag.Avis).Count == 0)
-{
-    <p class="text-muted">Aucun avis pour cette annonce.</p>
-}
-else
-{
-    <ul class="list-group">
-        @foreach (var a in (List<AutoMarket.Models.Avis>)ViewBag.Avis)
-        {
-            <li class="list-group-item">
-                <strong>@a.Auteur</strong>
-                <span class="badge bg-primary ms-2">@a.Note / 5</span>
-                <br />
-                <p class="mb-1">@a.Commentaire</p>
-                <small class="text-muted">@a.Date.ToShortDateString()</small>
-            </li>
-        }
-    </ul>
-}

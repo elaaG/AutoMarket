@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "LeWbfTddA3U=",
+  "dgSpecHash": "2Q6pt8Oqysc=",
   "success": true,
   "projectFilePath": "C:\\Users\\alagu\\Desktop\\.NET\\AutoMarket\\AutoMarket.csproj",
   "expectedPackageFiles": [
@@ -143,6 +143,8 @@
     "C:\\Users\\alagu\\.nuget\\packages\\system.reflection.metadataloadcontext\\8.0.0\\system.reflection.metadataloadcontext.8.0.0.nupkg.sha512",
     "C:\\Users\\alagu\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.4\\system.security.cryptography.pkcs.9.0.4.nupkg.sha512",
     "C:\\Users\\alagu\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.6\\system.security.cryptography.protecteddata.9.0.6.nupkg.sha512",
+    "C:\\Users\\alagu\\.nuget\\packages\\x.pagedlist\\10.5.9\\x.pagedlist.10.5.9.nupkg.sha512",
+    "C:\\Users\\alagu\\.nuget\\packages\\x.pagedlist.mvc.core\\10.5.9\\x.pagedlist.mvc.core.10.5.9.nupkg.sha512",
     "C:\\Users\\alagu\\.nuget\\packages\\zstdsharp.port\\0.7.3\\zstdsharp.port.0.7.3.nupkg.sha512"
   ],
   "logs": []

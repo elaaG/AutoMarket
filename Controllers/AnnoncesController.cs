@@ -6,7 +6,7 @@ using AutoMarket.Models.ViewModels;
 using AutoMarket.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-
+using X.PagedList;
 namespace AutoMarket.Controllers
 {
     public class AnnoncesController : Controller
@@ -25,15 +25,29 @@ namespace AutoMarket.Controllers
             _avisService = avisService;
         }
 
-        public async Task<IActionResult> Index()
+       public async Task<IActionResult> Index(int page = 1)
         {
-            var annonces = await _context.Annonces
+            int pageSize = 6;
+
+            var query = _context.Annonces
                 .Include(a => a.Vehicule)
                 .Where(a => a.Vehicule.Verifie)
+                .OrderByDescending(a => a.DatePublication);
+
+            var annonces = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            return View(annonces);
+            var totalCount = await query.CountAsync();
+
+            var pagedList = new StaticPagedList<Annonce>(
+                annonces, page, pageSize, totalCount
+            );
+
+            return View(pagedList);
         }
+
 
         [Authorize(Roles = "Seller")]
         public async Task<IActionResult> Dashboard()
@@ -59,6 +73,7 @@ namespace AutoMarket.Controllers
 
             var avis = await _avisService.GetAvisByAnnonceAsync(id);
             ViewBag.Avis = avis;
+            ViewBag.Average = avis.Any() ? avis.Average(a => a.Note) : 0;
 
             return View(annonce);
         }
@@ -224,16 +239,68 @@ namespace AutoMarket.Controllers
         }
 
         
-        public async Task<IActionResult> Search(string keyword)
-        {
-            var annonces = await _context.Annonces
-                .Include(a => a.Vehicule)
-                .Where(a =>
-                    a.Titre.Contains(keyword) ||
-                    a.Vehicule.Marque.Contains(keyword))
-                .ToListAsync();
+        [HttpGet]
+public async Task<IActionResult> Search(AnnonceSearchVM vm, int page = 1)
+{
+    int pageSize = 6;
 
-            return View(annonces);
-        }
+    var query = _context.Annonces
+        .Include(a => a.Vehicule)
+        .Where(a => a.Vehicule.Verifie) 
+        .AsQueryable();
+
+    if (!string.IsNullOrWhiteSpace(vm.Marque))
+        query = query.Where(a => a.Vehicule.Marque.Contains(vm.Marque));
+
+    if (!string.IsNullOrWhiteSpace(vm.Modele))
+        query = query.Where(a => a.Vehicule.Modele.Contains(vm.Modele));
+
+    if (!string.IsNullOrWhiteSpace(vm.Type))
+        query = query.Where(a => a.Type == vm.Type);
+
+    if (vm.PrixMin.HasValue)
+        query = query.Where(a => a.Vehicule.Prix >= vm.PrixMin.Value);
+
+    if (vm.PrixMax.HasValue)
+        query = query.Where(a => a.Vehicule.Prix <= vm.PrixMax.Value);
+
+    if (vm.KilometrageMin.HasValue)
+        query = query.Where(a => a.Vehicule.Kilometrage >= vm.KilometrageMin.Value);
+
+    if (vm.KilometrageMax.HasValue)
+        query = query.Where(a => a.Vehicule.Kilometrage <= vm.KilometrageMax.Value);
+
+    var totalCount = await query.CountAsync();
+
+    var annonces = await query
+        .OrderByDescending(a => a.DatePublication)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
+
+    var pagedList = new StaticPagedList<Annonce>(
+        annonces, page, pageSize, totalCount
+    );
+
+    return View("SearchResults", pagedList);
+}
+
+[Authorize]
+public async Task<IActionResult> Profile()
+{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    var user = await _context.Users
+        .Include(u => u.Annonces)
+        .ThenInclude(a => a.Vehicule)
+        .FirstOrDefaultAsync(u => u.Id == userId);
+
+    if (user == null)
+        return NotFound();
+
+    return View(user);
+}
+
+
     }
 }

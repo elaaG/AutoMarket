@@ -1,0 +1,42 @@
+@model X.PagedList.IPagedList<Annonce>
+@using X.PagedList.Mvc.Core
+
+<h2>Résultats de recherche</h2>
+
+@if (!Model.Any())
+{
+    <p>Aucune annonce trouvée.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var a in Model)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <img src="@a.Vehicule.PhotoPath" class="card-img-top">
+                    <div class="card-body">
+                        <h5>@a.Titre</h5>
+                        <p>@a.Vehicule.Prix €</p>
+                        <a class="btn btn-primary" href="/Annonces/Details/@a.Id">Voir</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@Html.PagedListPager(
+    Model,
+    page => Url.Action("Search", new
+    {
+        page,
+        Marque = Context.Request.Query["Marque"],
+        Modele = Context.Request.Query["Modele"],
+        Type = Context.Request.Query["Type"],
+        PrixMin = Context.Request.Query["PrixMin"],
+        PrixMax = Context.Request.Query["PrixMax"],
+        KilometrageMin = Context.Request.Query["KilometrageMin"],
+        KilometrageMax = Context.Request.Query["KilometrageMax"]
+    })
+)

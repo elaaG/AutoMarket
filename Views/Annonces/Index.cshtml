@@ -1,18 +1,22 @@
-@model List<AutoMarket.Models.Annonce>
+@model X.PagedList.IPagedList<AutoMarket.Models.Annonce>
+@using X.PagedList.Mvc.Core
 @{
     ViewData["Title"] = "Annonces";
 }
 
 <h2 class="mb-4 text-center">🚘 Annonces disponibles</h2>
 
-<form asp-action="Search" method="get" class="row mb-4">
-    <div class="col-md-10">
-        <input name="keyword" class="form-control" placeholder="Rechercher par titre ou marque..." />
-    </div>
-    <div class="col-md-2">
-        <button class="btn btn-primary w-100">Rechercher</button>
-    </div>
+<form asp-controller="Annonces" asp-action="Search" method="get">
+    <input name="Marque" placeholder="Marque" />
+    <input name="Modele" placeholder="Modele" />
+    <input name="Type" placeholder="Type" />
+    <input name="PrixMin" placeholder="Prix Min" />
+    <input name="PrixMax" placeholder="Prix Max" />
+    <input name="KilometrageMin" placeholder="Km Min" />
+    <input name="KilometrageMax" placeholder="Km Max" />
+    <button type="submit">Search</button>
 </form>
+
 
 <div class="row g-4">
 @foreach (var a in Model)

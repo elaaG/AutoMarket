@@ -1,26 +1,48 @@
-@model List<AutoMarket.Models.Annonce>
+@model AutoMarket.Models.ViewModels.AnnonceSearchVM
 
-<h2>Résultats de recherche</h2>
+<h2>Recherche avancée</h2>
 
-@if (!Model.Any())
-{
-    <p>Aucune annonce trouvée.</p>
-}
-else
-{
+<form asp-action="Search" method="get">
     <div class="row">
-        @foreach (var a in Model)
-        {
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <img src="@a.Vehicule.PhotoPath" class="card-img-top">
-                    <div class="card-body">
-                        <h5>@a.Titre</h5>
-                        <p>@a.Vehicule.Prix €</p>
-                        <a class="btn btn-primary" href="/Annonces/Details/@a.Id">Voir</a>
-                    </div>
-                </div>
-            </div>
-        }
+        <div class="col-md-4">
+            <label>Marque</label>
+            <input class="form-control" asp-for="Marque" />
+        </div>
+
+        <div class="col-md-4">
+            <label>Modele</label>
+            <input class="form-control" asp-for="Modele" />
+        </div>
+
+        <div class="col-md-4">
+            <label>Type</label>
+            <select class="form-control" asp-for="Type">
+                <option value="">-- Tous --</option>
+                <option value="Vente">Vente</option>
+                <option value="Location">Location</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label>Prix Min</label>
+            <input class="form-control" asp-for="PrixMin" type="number" />
+        </div>
+
+        <div class="col-md-3">
+            <label>Prix Max</label>
+            <input class="form-control" asp-for="PrixMax" type="number" />
+        </div>
+
+        <div class="col-md-3">
+            <label>Kilometrage Min</label>
+            <input class="form-control" asp-for="KilometrageMin" type="number" />
+        </div>
+
+        <div class="col-md-3">
+            <label>Kilometrage Max</label>
+            <input class="form-control" asp-for="KilometrageMax" type="number" />
+        </div>
     </div>
-}
+
+    <button class="btn btn-primary mt-3" type="submit">Rechercher</button>
+</form>

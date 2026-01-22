@@ -24,6 +24,8 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
 
+
+
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="Annonces" asp-action="Index">Annonces</a>
                 </li>
@@ -39,10 +41,9 @@
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item">
-                        <span class="navbar-text text-light me-2">
-                            Hello @User.Identity.Name
-                        </span>
+                        <a class="nav-link" asp-controller="Annonces" asp-action="Profile">Profile</a>
                     </li>
+                
 
                     <li class="nav-item">
                         <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">

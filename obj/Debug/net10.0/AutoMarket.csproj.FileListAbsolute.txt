@@ -437,3 +437,5 @@ C:\Users\alagu\Desktop\.NET\AutoMarket\obj\Debug\net10.0\refint\AutoMarket.dll
 C:\Users\alagu\Desktop\.NET\AutoMarket\obj\Debug\net10.0\AutoMarket.pdb
 C:\Users\alagu\Desktop\.NET\AutoMarket\obj\Debug\net10.0\AutoMarket.genruntimeconfig.cache
 C:\Users\alagu\Desktop\.NET\AutoMarket\obj\Debug\net10.0\ref\AutoMarket.dll
+C:\Users\alagu\Desktop\.NET\AutoMarket\bin\Debug\net10.0\X.PagedList.dll
+C:\Users\alagu\Desktop\.NET\AutoMarket\bin\Debug\net10.0\X.PagedList.Mvc.Core.dll

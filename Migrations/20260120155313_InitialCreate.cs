@@ -30,6 +30,8 @@ namespace AutoMarket.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Role = table.Column<int>(type: "INTEGER", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -206,7 +208,7 @@ namespace AutoMarket.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Verification",
+                name: "Verifications",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -220,21 +222,21 @@ namespace AutoMarket.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Verification", x => x.Id);
+                    table.PrimaryKey("PK_Verifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Verification_Annonces_AnnonceId",
+                        name: "FK_Verifications_Annonces_AnnonceId",
                         column: x => x.AnnonceId,
                         principalTable: "Annonces",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Verification_AspNetUsers_ExpertId",
+                        name: "FK_Verifications_AspNetUsers_ExpertId",
                         column: x => x.ExpertId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Verification_Vehicules_VehiculeId",
+                        name: "FK_Verifications_Vehicules_VehiculeId",
                         column: x => x.VehiculeId,
                         principalTable: "Vehicules",
                         principalColumn: "Id");
@@ -289,18 +291,18 @@ namespace AutoMarket.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Verification_AnnonceId",
-                table: "Verification",
+                name: "IX_Verifications_AnnonceId",
+                table: "Verifications",
                 column: "AnnonceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Verification_ExpertId",
-                table: "Verification",
+                name: "IX_Verifications_ExpertId",
+                table: "Verifications",
                 column: "ExpertId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Verification_VehiculeId",
-                table: "Verification",
+                name: "IX_Verifications_VehiculeId",
+                table: "Verifications",
                 column: "VehiculeId");
         }
 
@@ -323,7 +325,7 @@ namespace AutoMarket.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Verification");
+                name: "Verifications");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
