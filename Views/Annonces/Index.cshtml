@@ -1,59 +1,103 @@
-@model X.PagedList.IPagedList<AutoMarket.Models.Annonce>
+@using X.PagedList
 @using X.PagedList.Mvc.Core
+@model IPagedList<AutoMarket.Models.Annonce>
 @{
     ViewData["Title"] = "Annonces";
 }
+<h2>🔍 Annonces disponibles</h2>
 
-<h2 class="mb-4 text-center">🚘 Annonces disponibles</h2>
+<form asp-action="Search" method="get">
+    <div class="row">
 
-<form asp-controller="Annonces" asp-action="Search" method="get">
-    <input name="Marque" placeholder="Marque" />
-    <input name="Modele" placeholder="Modele" />
-    <input name="Type" placeholder="Type" />
-    <input name="PrixMin" placeholder="Prix Min" />
-    <input name="PrixMax" placeholder="Prix Max" />
-    <input name="KilometrageMin" placeholder="Km Min" />
-    <input name="KilometrageMax" placeholder="Km Max" />
-    <button type="submit">Search</button>
-</form>
+        <div class="col-md-3">
+            <label>Status</label>
+            <select class="form-control" name="Status">
 
-
-<div class="row g-4">
-@foreach (var a in Model)
-{
-    <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-
-            <img src="@(string.IsNullOrEmpty(a.Vehicule.PhotoPath) ? "/images/no-image.png" : a.Vehicule.PhotoPath)"
-                 class="card-img-top"
-                 style="height:200px; object-fit:cover;" />
-
-            <div class="card-body">
-                <h5 class="card-title">@a.Titre</h5>
-
-                <p class="card-text">
-                    <strong>@a.Vehicule.Marque</strong> @a.Vehicule.Modele<br />
-                    💰 @a.Vehicule.Prix €
-                </p>
-
-                @if (a.Vehicule.Verifie)
-                {
-                    <span class="badge bg-success">✔ Vérifié</span>
-                }
-                else
-                {
-                    <span class="badge bg-warning text-dark">⏳ En attente</span>
-                }
-            </div>
-
-            <div class="card-footer bg-white">
-                <a class="btn btn-outline-primary w-100"
-                   asp-action="Details"
-                   asp-route-id="@a.Id">
-                    Voir détails
-                </a>
-            </div>
+                <option value="">-- Tous --</option>
+                <option value="Validée">Validée</option>
+                <option value="En attente">En attente</option>
+                <option value="Rejetée">Rejetée</option>
+            </select>
         </div>
+
+        <div class="col-md-3">
+            <label>Trier par</label>
+            <select class="form-control" name="SortBy">
+                <option value="newest">Plus récentes</option>
+                <option value="priceAsc">Prix ↑</option>
+                <option value="priceDesc">Prix ↓</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label>Marque</label>
+            <input class="form-control" name="Marque" />
+        </div>
+
+        <div class="col-md-3">
+            <label>Modele</label>
+            <input class="form-control" name="Modele" />
+        </div>
+
+        <div class="col-md-3">
+            <label>Type</label>
+            <select class="form-control" name="Type">
+                <option value="">-- Tous --</option>
+                <option value="Vente">Vente</option>
+                <option value="Location">Location</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label>Prix Min</label>
+            <input class="form-control" name="PrixMin" type="number" />
+        </div>
+
+        <div class="col-md-3">
+            <label>Prix Max</label>
+            <input class="form-control" name="PrixMax" type="number" />
+        </div>
+
+        <div class="col-md-3">
+            <label>Kilometrage Min</label>
+            <input class="form-control" name="KilometrageMin" type="number" />
+        </div>
+
+        <div class="col-md-3">
+            <label>Kilometrage Max</label>
+            <input class="form-control" name="KilometrageMax" type="number" />
+        </div>
+
     </div>
+
+    <button class="btn btn-primary mt-3" type="submit">Search</button>
+</form>
+@if (Model is IPagedList<AutoMarket.Models.Annonce>)
+{
+    var annonces = (IPagedList<AutoMarket.Models.Annonce>)Model;
+
+    <div class="row mt-4">
+        @foreach (var annonce in annonces)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <img src="@annonce.Vehicule.PhotoPath" class="card-img-top" />
+                    <div class="card-body">
+                        <h5 class="card-title">@annonce.Titre</h5>
+                        <p class="card-text">
+                            @annonce.Vehicule.Marque @annonce.Vehicule.Modele <br />
+                            Prix: @annonce.Vehicule.Prix DT <br />
+                            Kilométrage: @annonce.Vehicule.Kilometrage km <br />
+                            Statut: @annonce.Statut
+                        </p>
+                        <a class="btn btn-primary" href="/Annonces/Details/@annonce.Id">Voir</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @Html.PagedListPager(annonces, page => Url.Action("Search", new { page }))
+
 }
-</div>
+

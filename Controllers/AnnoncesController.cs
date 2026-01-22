@@ -44,6 +44,8 @@ namespace AutoMarket.Controllers
             var pagedList = new StaticPagedList<Annonce>(
                 annonces, page, pageSize, totalCount
             );
+            
+            ViewBag.SearchVM = new AnnonceSearchVM();
 
             return View(pagedList);
         }
@@ -239,16 +241,19 @@ namespace AutoMarket.Controllers
         }
 
         
-        [HttpGet]
+        
+[HttpGet]
 public async Task<IActionResult> Search(AnnonceSearchVM vm, int page = 1)
 {
     int pageSize = 6;
 
     var query = _context.Annonces
         .Include(a => a.Vehicule)
-        .Where(a => a.Vehicule.Verifie) 
         .AsQueryable();
 
+    query = query.Where(a => a.Vehicule.Verifie);
+
+    // FILTERS
     if (!string.IsNullOrWhiteSpace(vm.Marque))
         query = query.Where(a => a.Vehicule.Marque.Contains(vm.Marque));
 
@@ -257,6 +262,9 @@ public async Task<IActionResult> Search(AnnonceSearchVM vm, int page = 1)
 
     if (!string.IsNullOrWhiteSpace(vm.Type))
         query = query.Where(a => a.Type == vm.Type);
+
+    if (!string.IsNullOrWhiteSpace(vm.Status))
+        query = query.Where(a => a.Statut == vm.Status);
 
     if (vm.PrixMin.HasValue)
         query = query.Where(a => a.Vehicule.Prix >= vm.PrixMin.Value);
@@ -270,19 +278,23 @@ public async Task<IActionResult> Search(AnnonceSearchVM vm, int page = 1)
     if (vm.KilometrageMax.HasValue)
         query = query.Where(a => a.Vehicule.Kilometrage <= vm.KilometrageMax.Value);
 
+    // SORT
+    query = vm.SortBy switch
+    {
+        "priceAsc" => query.OrderBy(a => a.Vehicule.Prix),
+        "priceDesc" => query.OrderByDescending(a => a.Vehicule.Prix),
+        _ => query.OrderByDescending(a => a.DatePublication)
+    };
+
     var totalCount = await query.CountAsync();
 
     var annonces = await query
-        .OrderByDescending(a => a.DatePublication)
         .Skip((page - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
 
-    var pagedList = new StaticPagedList<Annonce>(
-        annonces, page, pageSize, totalCount
-    );
-
-    return View("SearchResults", pagedList);
+    return View("SearchResults",
+        new StaticPagedList<Annonce>(annonces, page, pageSize, totalCount));
 }
 
 [Authorize]

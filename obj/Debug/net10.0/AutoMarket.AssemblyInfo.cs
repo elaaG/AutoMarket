@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutoMarket")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32ebe92236dc870bf21364fa16541d7fa8a83d7f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b541bdbaf77369140a49545125436dc24a2886d6")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutoMarket")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutoMarket")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

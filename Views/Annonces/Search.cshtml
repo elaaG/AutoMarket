@@ -3,18 +3,39 @@
 <h2>Recherche avancée</h2>
 
 <form asp-action="Search" method="get">
+
     <div class="row">
-        <div class="col-md-4">
+
+        <div class="col-md-3">
+            <label>Status</label>
+            <select class="form-control" asp-for="Status">
+                <option value="">-- Tous --</option>
+                <option value="Validated">Validée</option>
+                <option value="Pending">En attente</option>
+                <option value="Rejected">Rejetée</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label>Trier par</label>
+            <select class="form-control" asp-for="SortBy">
+                <option value="newest">Plus récentes</option>
+                <option value="priceAsc">Prix ↑</option>
+                <option value="priceDesc">Prix ↓</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
             <label>Marque</label>
             <input class="form-control" asp-for="Marque" />
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label>Modele</label>
             <input class="form-control" asp-for="Modele" />
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label>Type</label>
             <select class="form-control" asp-for="Type">
                 <option value="">-- Tous --</option>
@@ -42,7 +63,9 @@
             <label>Kilometrage Max</label>
             <input class="form-control" asp-for="KilometrageMax" type="number" />
         </div>
+
     </div>
 
-    <button class="btn btn-primary mt-3" type="submit">Rechercher</button>
+    <button class="btn btn-primary mt-3" type="submit">Search</button>
+    <a class="btn btn-secondary mt-3" href="/Annonces/Search">Clear</a>
 </form>

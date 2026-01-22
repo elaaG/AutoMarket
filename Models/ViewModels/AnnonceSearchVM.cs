@@ -9,5 +9,7 @@ namespace AutoMarket.Models.ViewModels
     public decimal? PrixMax { get; set; }
     public int? KilometrageMin { get; set; }
     public int? KilometrageMax { get; set; }
+    public string? Status { get; set; } 
+    public string? SortBy { get; set; } 
 }
 }
